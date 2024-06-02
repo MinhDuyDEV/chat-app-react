@@ -6,6 +6,7 @@ import mockConversations from "../mocks/conversations";
 
 const ConversationPage = () => {
   const { id } = useParams();
+  console.log("🚀 ~ ConversationPage ~ id:", id);
   return (
     <Page>
       <ConversationSidebar conversations={mockConversations} />
