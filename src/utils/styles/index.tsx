@@ -56,8 +56,8 @@ export const Page = styled.div<PageProps>`
   background-color: #1a1a1a;
   height: 100%;
   display: ${(props) => props.display};
-  justify-content: ${(props) => props.justifyContent};
-  align-items: ${(props) => props.alignItems};
+  justify-content: ${(props) => props.justifycontent};
+  align-items: ${(props) => props.alignitems};
 `;
 
 export const ConversationSidebarStyle = styled.aside`

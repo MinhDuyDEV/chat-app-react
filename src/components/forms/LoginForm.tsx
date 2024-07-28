@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Button,
   InputContainer,
@@ -7,17 +7,25 @@ import {
 } from "../../utils/styles";
 import styles from "./index.module.scss";
 import { useForm } from "react-hook-form";
+import { UserCredentialsParams } from "../../utils/types";
+import { postLoginUser } from "../../utils/api";
 
 export const LoginForm = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<UserCredentialsParams>();
+  const navigate = useNavigate();
 
   console.log("🚀 ~ LoginForm ~ errors:", errors);
-  const onSubmit = (data: unknown) => {
-    console.log(data);
+  const onSubmit = async (data: UserCredentialsParams) => {
+    try {
+      await postLoginUser(data);
+      navigate("/conversations");
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>

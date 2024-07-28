@@ -3,7 +3,7 @@ import { Page } from "../utils/styles";
 
 const RegisterPage = () => {
   return (
-    <Page display='flex' justifyContent='center' alignItems='center'>
+    <Page display='flex' justifycontent='center' alignitems='center'>
       <RegisterForm />
     </Page>
   );

@@ -7,18 +7,25 @@ import {
 } from "../../utils/styles";
 import styles from "./index.module.scss";
 import { useForm } from "react-hook-form";
+import { CreateUserParams } from "../../utils/types";
+import { postRegisterUser } from "../../utils/api";
 
 const RegisterForm = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<CreateUserParams>();
 
   console.log("🚀 ~ RegisterForm ~ errors:", errors);
-  const onSubmit = (data: unknown) => {
-    console.log(data);
+  const onSubmit = async (data: CreateUserParams) => {
+    try {
+      await postRegisterUser(data);
+    } catch (err) {
+      console.log(err);
+    }
   };
+
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <InputContainer>
