@@ -4,24 +4,30 @@ import LoginPage from "./pages/LoginPage";
 import ConversationPage from "./pages/ConversationPage";
 import ConversationChannelPage from "./pages/ConversationChannelPage";
 import { AuthenticatedRoute } from "./components/AuthenticatedRoute";
+import { User } from "./utils/types";
+import { useState } from "react";
+import { AuthContext } from "./utils/contexts/AuthContext";
 
 function App() {
+  const [user, setUser] = useState<User>();
   return (
     <>
-      <Routes>
-        <Route path='/register' element={<RegisterPage />}></Route>
-        <Route path='/login' element={<LoginPage />} />
-        <Route
-          path='conversations'
-          element={
-            <AuthenticatedRoute>
-              <ConversationPage />
-            </AuthenticatedRoute>
-          }
-        >
-          <Route path=':id' element={<ConversationChannelPage />} />
-        </Route>
-      </Routes>
+      <AuthContext.Provider value={{ user, updateAuthUser: setUser }}>
+        <Routes>
+          <Route path='/register' element={<RegisterPage />}></Route>
+          <Route path='/login' element={<LoginPage />} />
+          <Route
+            path='conversations'
+            element={
+              <AuthenticatedRoute>
+                <ConversationPage />
+              </AuthenticatedRoute>
+            }
+          >
+            <Route path=':id' element={<ConversationChannelPage />} />
+          </Route>
+        </Routes>
+      </AuthContext.Provider>
     </>
   );
 }
