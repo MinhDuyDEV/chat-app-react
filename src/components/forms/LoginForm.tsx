@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   Form,
@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { postLoginUser } from "@/utils/api";
 
 const formLoginSchema = z.object({
   email: z.string().min(2).max(50).email(),
@@ -20,6 +21,7 @@ const formLoginSchema = z.object({
 });
 
 const LoginForm = () => {
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof formLoginSchema>>({
     resolver: zodResolver(formLoginSchema),
     defaultValues: {
@@ -28,8 +30,14 @@ const LoginForm = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formLoginSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formLoginSchema>) => {
     console.log("🚀 ~ onSubmit ~ values:", values);
+    try {
+      await postLoginUser(values);
+      navigate("/conversations");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -37,9 +45,9 @@ const LoginForm = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-4 w-full'
+          className='w-full space-y-4'
         >
-          <h2 className='text-4xl font-semibold text-center mb-2'>
+          <h2 className='mb-2 text-4xl font-semibold text-center'>
             Login Form
           </h2>
           <FormField
@@ -49,7 +57,11 @@ const LoginForm = () => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder='email' {...field} />
+                  <Input
+                    placeholder='email'
+                    className='text-slate-900'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -62,7 +74,12 @@ const LoginForm = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type='password' placeholder='********' {...field} />
+                  <Input
+                    type='password'
+                    placeholder='********'
+                    className='text-slate-900'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

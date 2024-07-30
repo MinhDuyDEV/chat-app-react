@@ -1,7 +1,13 @@
+import { useContext } from "react";
+
+import { AuthContext } from "@/utils/contexts/AuthContext";
+
 const ConversationChannelPage = () => {
+  const { user } = useContext(AuthContext);
+
   return (
-    <div className='my-4 bg-neutral-800 flex-1 rounded-lg'>
-      ConversationChannelPage
+    <div className='flex-1 my-4 rounded-lg bg-neutral-800'>
+      {user && user.email}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   Form,
@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { postRegisterUser } from "@/utils/api";
 
 const formRegisterSchema = z.object({
   email: z.string().min(2).max(50).email(),
@@ -22,6 +23,7 @@ const formRegisterSchema = z.object({
 });
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof formRegisterSchema>>({
     resolver: zodResolver(formRegisterSchema),
     defaultValues: {
@@ -32,8 +34,14 @@ const RegisterForm = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formRegisterSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formRegisterSchema>) => {
     console.log("🚀 ~ onSubmit ~ values:", values);
+    try {
+      await postRegisterUser(values);
+      navigate("/login");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -41,9 +49,9 @@ const RegisterForm = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-4 w-full'
+          className='w-full space-y-4'
         >
-          <h2 className='text-4xl font-semibold text-center mb-2'>
+          <h2 className='mb-2 text-4xl font-semibold text-center'>
             Register Form
           </h2>
           <FormField
@@ -53,7 +61,11 @@ const RegisterForm = () => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder='email' {...field} />
+                  <Input
+                    placeholder='email'
+                    className='text-slate-900'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -66,7 +78,11 @@ const RegisterForm = () => {
               <FormItem>
                 <FormLabel>First name</FormLabel>
                 <FormControl>
-                  <Input placeholder='first name' {...field} />
+                  <Input
+                    placeholder='first name'
+                    className='text-slate-900'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -79,7 +95,11 @@ const RegisterForm = () => {
               <FormItem>
                 <FormLabel>Last name</FormLabel>
                 <FormControl>
-                  <Input placeholder='last name' {...field} />
+                  <Input
+                    placeholder='last name'
+                    className='text-slate-900'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -92,7 +112,12 @@ const RegisterForm = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type='password' placeholder='********' {...field} />
+                  <Input
+                    type='password'
+                    placeholder='********'
+                    className='text-slate-900'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
