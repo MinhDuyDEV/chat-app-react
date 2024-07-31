@@ -7,13 +7,25 @@ import {
   Video,
 } from "lucide-react";
 
-import mockConversations from "@/mocks/conversations";
+import { useEffect, useState } from "react";
+import { getConversations } from "@/utils/api";
+import { ConversationType } from "@/utils/types";
 import ConversationPanel from "@/components/conversations/ConversationPanel";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ConversationSidebar from "@/components/conversations/ConversationSidebar";
 
 const ConversationPage = () => {
   const { id } = useParams();
+  const [conversations, setConversations] = useState<ConversationType[]>([]);
+  useEffect(() => {
+    getConversations()
+      .then(({ data }) => {
+        console.log("🚀 ~ .then ~ data:", data);
+        setConversations(data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <div className='flex h-full gap-4 px-4'>
       <div className='flex flex-col gap-2 mt-4'>
@@ -39,7 +51,7 @@ const ConversationPage = () => {
           <Video size={28} />
         </div>
       </div>
-      <ConversationSidebar conversations={mockConversations} />
+      <ConversationSidebar conversations={conversations} />
       {!id && <ConversationPanel />}
       <Outlet />
     </div>

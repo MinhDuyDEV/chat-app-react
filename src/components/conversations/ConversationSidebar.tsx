@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
 import { MonitorDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import CreateConversationModal from "@/components/modals/CreateConversationModal";
+import { AuthContext } from "@/utils/contexts/AuthContext";
 
 type Props = {
   conversations: ConversationType[];
@@ -14,6 +15,12 @@ type Props = {
 
 const ConversationSidebar: FC<Props> = ({ conversations }) => {
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+  const getDisplayUser = (conversation: ConversationType) => {
+    return conversation.creator.id === user?.id
+      ? conversation.recipient
+      : conversation.creator;
+  };
 
   return (
     <div className='h-full'>
@@ -37,10 +44,12 @@ const ConversationSidebar: FC<Props> = ({ conversations }) => {
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                   <div className='flex flex-col'>
-                    <p className='font-bold'>{conversation.name}</p>
-                    <p className='text-sm text-neutral-400'>
-                      {conversation.lastMessage}
+                    <p className='font-bold'>
+                      {`${getDisplayUser(conversation).firstName} ${
+                        getDisplayUser(conversation).lastName
+                      }`}
                     </p>
+                    <p className='text-sm text-neutral-400'>Sample Text</p>
                   </div>
                 </div>
               ))}
