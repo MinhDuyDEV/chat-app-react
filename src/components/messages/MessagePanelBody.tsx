@@ -1,16 +1,14 @@
-import { FC, useContext } from "react";
+import { FC } from "react";
 
-import { MessageType } from "@/utils/types";
+import { MessageType, User } from "@/utils/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AuthContext } from "@/utils/contexts/AuthContext";
 
 type Props = {
   messages: MessageType[];
+  user: User;
 };
 
-const MessagePanelBody: FC<Props> = ({ messages }) => {
-  const { user } = useContext(AuthContext);
-
+const MessagePanelBody: FC<Props> = ({ messages, user }) => {
   return (
     <ScrollArea scrollToBottom={true} className='flex-1 my-3 overflow-y-auto'>
       <div className='flex flex-col gap-2 ml-2 mr-4'>
