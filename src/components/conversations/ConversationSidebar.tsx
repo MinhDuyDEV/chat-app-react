@@ -1,4 +1,5 @@
 import { FC, useContext } from "react";
+import { formatDistanceStrict } from "date-fns";
 import { MonitorDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -20,6 +21,17 @@ const ConversationSidebar: FC<Props> = ({ conversations }) => {
     return conversation.creator.id === user?.id
       ? conversation.recipient
       : conversation.creator;
+  };
+  const getLastMessage = (conversation: ConversationType) => {
+    return conversation.lastMessageSent.content.length > 40
+      ? {
+          message: `${conversation.lastMessageSent.content.slice(0, 40)}...`,
+          createdAt: conversation.lastMessageSent.createdAt,
+        }
+      : {
+          message: conversation.lastMessageSent.content,
+          createdAt: conversation.lastMessageSent.createdAt,
+        };
   };
 
   return (
@@ -43,13 +55,21 @@ const ConversationSidebar: FC<Props> = ({ conversations }) => {
                     <AvatarImage src='https://github.com/shadcn.png' />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
-                  <div className='flex flex-col'>
+                  <div className='flex flex-col w-full'>
                     <p className='font-bold'>
                       {`${getDisplayUser(conversation).firstName} ${
                         getDisplayUser(conversation).lastName
                       }`}
                     </p>
-                    <p className='text-sm text-neutral-400'>Sample Text</p>
+                    <div className='flex items-center justify-between w-full text-sm text-neutral-400'>
+                      <p> {getLastMessage(conversation).message}</p>
+                      <p>
+                        {formatDistanceStrict(
+                          new Date(getLastMessage(conversation).createdAt),
+                          new Date()
+                        )}
+                      </p>
+                    </div>
                   </div>
                 </div>
               ))}

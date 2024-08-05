@@ -2,6 +2,7 @@ export type ConversationType = {
   id: number;
   creator: User;
   recipient: User;
+  lastMessageSent: MessageType;
 };
 
 export type CreateUserParams = {
@@ -21,4 +22,11 @@ export type User = {
   email: string;
   firstName: string;
   lastName: string;
+};
+
+export type MessageType = {
+  id: number;
+  content: string;
+  createdAt: string;
+  author: User;
 };

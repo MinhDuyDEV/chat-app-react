@@ -1,15 +1,23 @@
-import { useContext } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
-import { AuthContext } from "@/utils/contexts/AuthContext";
+import { MessageType } from "@/utils/types";
+import { getConversationMessages } from "@/utils/api";
+import MessagePanel from "@/components/messages/MessagePanel";
 
 const ConversationChannelPage = () => {
-  const { user } = useContext(AuthContext);
+  const [messages, setMessages] = useState<MessageType[]>([]);
+  const { id } = useParams();
+  useEffect(() => {
+    const conversationId = parseInt(id!);
+    getConversationMessages(conversationId)
+      .then(({ data }) => {
+        setMessages(data);
+      })
+      .catch((err) => console.log(err));
+  }, [id]);
 
-  return (
-    <div className='flex-1 my-4 rounded-lg bg-neutral-800'>
-      {user && user.email}
-    </div>
-  );
+  return <MessagePanel messages={messages} />;
 };
 
 export default ConversationChannelPage;
