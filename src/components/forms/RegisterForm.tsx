@@ -35,7 +35,6 @@ const RegisterForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formRegisterSchema>) => {
-    console.log("🚀 ~ onSubmit ~ values:", values);
     try {
       await postRegisterUser(values);
       navigate("/login");

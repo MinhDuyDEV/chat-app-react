@@ -31,7 +31,6 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formLoginSchema>) => {
-    console.log("🚀 ~ onSubmit ~ values:", values);
     try {
       await postLoginUser(values);
       navigate("/conversations");

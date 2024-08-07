@@ -21,7 +21,6 @@ const MessagePanelFooter = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof messageFormSchema>) => {
-    console.log("🚀 ~ onSubmit ~ values:", values);
     if (!id) return;
     try {
       await postNewMessage({

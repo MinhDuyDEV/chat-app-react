@@ -1,20 +1,20 @@
-import { FC, useContext } from "react";
+import { useContext } from "react";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 import { RootState } from "@/store";
-import { MessageType } from "@/utils/types";
 import MessagePanelBody from "./MessagePanelBody";
 import MessagePanelHeader from "./MessagePanelHeader";
 import MessagePanelFooter from "./MessagePanelFooter";
 import { AuthContext } from "@/utils/contexts/AuthContext";
+import { formatConversationMessages } from "@/utils/format";
 
-type Props = {
-  messages: MessageType[];
-};
-
-const MessagePanel: FC<Props> = ({ messages }) => {
+const MessagePanel = () => {
+  const { id } = useParams();
   const { user } = useContext(AuthContext);
-  const loading = useSelector((state: RootState) => state.messages.loading);
+  const { loading, messages: conversationMessages } = useSelector(
+    (state: RootState) => state.messages
+  );
   if (!user) return null;
 
   return (
@@ -25,7 +25,10 @@ const MessagePanel: FC<Props> = ({ messages }) => {
           <div className='p-2 border border-t-0 rounded-full animate-spin'></div>
         </div>
       ) : (
-        <MessagePanelBody messages={messages} user={user} />
+        <MessagePanelBody
+          messages={formatConversationMessages(conversationMessages, id)}
+          user={user}
+        />
       )}
       <MessagePanelFooter />
     </div>
