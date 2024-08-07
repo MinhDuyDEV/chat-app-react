@@ -18,8 +18,8 @@ type Props = {
 const ConversationSidebar: FC<Props> = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
-  const conversations = useSelector(
-    (state: RootState) => state.conversation.conversations
+  const { conversations } = useSelector(
+    (state: RootState) => state.conversation
   );
 
   const getDisplayUser = (conversation: ConversationType) => {
@@ -54,6 +54,15 @@ const ConversationSidebar: FC<Props> = () => {
                       {`${getDisplayUser(conversation).firstName} ${
                         getDisplayUser(conversation).lastName
                       }`}
+                    </p>
+                    <p className='text-sm font-light text-neutral-500'>
+                      {conversation.lastMessageSent?.content.length > 30
+                        ? `
+                        ${conversation.lastMessageSent?.content.slice(0, 30)}...
+                      `
+                        : `
+                        ${conversation.lastMessageSent?.content}
+                      `}
                     </p>
                   </div>
                 </div>

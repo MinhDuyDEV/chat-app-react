@@ -18,8 +18,8 @@ import ConversationSidebar from "@/components/conversations/ConversationSidebar"
 const ConversationPage = () => {
   const { id } = useParams();
   const dispatch = useDispatch<AppDispatch>();
-  const conversations = useSelector(
-    (state: RootState) => state.conversation.conversations
+  const { conversations } = useSelector(
+    (state: RootState) => state.conversation
   );
   useEffect(() => {
     dispatch(fetchConversationsThunk());

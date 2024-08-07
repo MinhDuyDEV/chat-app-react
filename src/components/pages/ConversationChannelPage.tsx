@@ -6,6 +6,7 @@ import { AppDispatch } from "@/store";
 import { MessageEventPayload } from "@/utils/types";
 import MessagePanel from "@/components/messages/MessagePanel";
 import { SocketContext } from "@/utils/contexts/SocketContext";
+import { updateConversation } from "@/store/conversationSlice";
 import { fetchMessagesThunk, addMessage } from "@/store/messageSlice";
 
 const ConversationChannelPage = () => {
@@ -19,8 +20,9 @@ const ConversationChannelPage = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
-    socket.on("onMessage", (data: MessageEventPayload) => {
-      dispatch(addMessage(data));
+    socket.on("onMessage", (payload: MessageEventPayload) => {
+      dispatch(addMessage(payload));
+      dispatch(updateConversation(payload));
     });
     return () => {
       socket.off("onMessage");

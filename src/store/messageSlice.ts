@@ -25,11 +25,11 @@ export const messagesSlice = createSlice({
   initialState,
   reducers: {
     addMessage: (state, action: PayloadAction<MessageEventPayload>) => {
-      const { conversation, ...content } = action.payload;
+      const { conversation, message } = action.payload;
       const conversationMessage = state.messages.find(
         (cm) => cm.id === conversation.id
       );
-      conversationMessage?.messages.push(content);
+      conversationMessage?.messages.push(message);
     },
   },
   extraReducers: (builder) => {
