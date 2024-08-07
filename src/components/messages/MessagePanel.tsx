@@ -14,7 +14,7 @@ type Props = {
 
 const MessagePanel: FC<Props> = ({ messages }) => {
   const { user } = useContext(AuthContext);
-  const loading = useSelector((state: RootState) => state.conversation.loading);
+  const loading = useSelector((state: RootState) => state.messages.loading);
   if (!user) return null;
 
   return (

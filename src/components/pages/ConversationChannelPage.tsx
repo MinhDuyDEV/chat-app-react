@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useContext, useEffect, useState } from "react";
 
 import { AppDispatch, RootState } from "@/store";
+import { fetchMessagesThunk } from "@/store/messageSlice";
 import MessagePanel from "@/components/messages/MessagePanel";
 import { SocketContext } from "@/utils/contexts/SocketContext";
-import { fetchMessagesThunk } from "@/store/conversationSlice";
 import { MessageEventPayload, MessageType } from "@/utils/types";
 
 const ConversationChannelPage = () => {
@@ -13,8 +13,8 @@ const ConversationChannelPage = () => {
   const { id } = useParams();
   const socket = useContext(SocketContext);
   const dispatch = useDispatch<AppDispatch>();
-  const conversationMessages = useSelector(
-    (state: RootState) => state.conversation.messages
+  const { messages: conversationMessages } = useSelector(
+    (state: RootState) => state.messages
   );
 
   useEffect(() => {
