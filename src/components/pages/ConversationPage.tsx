@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { Outlet, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   MessageSquareMore,
   RefreshCw,
@@ -7,24 +9,21 @@ import {
   Video,
 } from "lucide-react";
 
-import { useEffect, useState } from "react";
-import { getConversations } from "@/utils/api";
-import { ConversationType } from "@/utils/types";
-import ConversationPanel from "@/components/conversations/ConversationPanel";
+import { AppDispatch, RootState } from "@/store";
+import { fetchConversationsThunk } from "@/store/conversationSlice";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ConversationPanel from "@/components/conversations/ConversationPanel";
 import ConversationSidebar from "@/components/conversations/ConversationSidebar";
 
 const ConversationPage = () => {
   const { id } = useParams();
-  const [conversations, setConversations] = useState<ConversationType[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
+  const conversations = useSelector(
+    (state: RootState) => state.conversation.conversations
+  );
   useEffect(() => {
-    getConversations()
-      .then(({ data }) => {
-        console.log("🚀 ~ .then ~ data:", data);
-        setConversations(data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    dispatch(fetchConversationsThunk());
+  }, [dispatch]);
 
   return (
     <div className='flex h-full gap-4 px-4'>

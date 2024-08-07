@@ -1,37 +1,31 @@
 import { FC, useContext } from "react";
-import { formatDistanceStrict } from "date-fns";
+import { useSelector } from "react-redux";
 import { MonitorDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+import { RootState } from "@/store";
 import { ConversationType } from "@/utils/types";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { AuthContext } from "@/utils/contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import CreateConversationModal from "@/components/modals/CreateConversationModal";
-import { AuthContext } from "@/utils/contexts/AuthContext";
 
 type Props = {
   conversations: ConversationType[];
 };
 
-const ConversationSidebar: FC<Props> = ({ conversations }) => {
+const ConversationSidebar: FC<Props> = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
+  const conversations = useSelector(
+    (state: RootState) => state.conversation.conversations
+  );
+
   const getDisplayUser = (conversation: ConversationType) => {
     return conversation.creator.id === user?.id
       ? conversation.recipient
       : conversation.creator;
-  };
-  const getLastMessage = (conversation: ConversationType) => {
-    return conversation.lastMessageSent.content.length > 40
-      ? {
-          message: `${conversation.lastMessageSent.content.slice(0, 40)}...`,
-          createdAt: conversation.lastMessageSent.createdAt,
-        }
-      : {
-          message: conversation.lastMessageSent.content,
-          createdAt: conversation.lastMessageSent.createdAt,
-        };
   };
 
   return (
@@ -61,15 +55,6 @@ const ConversationSidebar: FC<Props> = ({ conversations }) => {
                         getDisplayUser(conversation).lastName
                       }`}
                     </p>
-                    <div className='flex items-center justify-between w-full text-sm text-neutral-400'>
-                      <p> {getLastMessage(conversation).message}</p>
-                      <p>
-                        {formatDistanceStrict(
-                          new Date(getLastMessage(conversation).createdAt),
-                          new Date()
-                        )}
-                      </p>
-                    </div>
                   </div>
                 </div>
               ))}
