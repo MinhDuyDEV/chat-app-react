@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Edit } from "lucide-react";
 
 import {
@@ -10,8 +11,9 @@ import {
 import CreateConversationForm from "@/components/forms/CreateConversationForm";
 
 const CreateConversationModal = () => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
       <DialogTrigger asChild>
         <div className='p-2 rounded-full cursor-pointer bg-neutral-600 hover:bg-neutral-500'>
           <Edit size={20} />
@@ -24,7 +26,7 @@ const CreateConversationModal = () => {
           </DialogTitle>
         </DialogHeader>
         <div className='flex items-center justify-center'>
-          <CreateConversationForm />
+          <CreateConversationForm setIsOpen={setIsOpen} />
         </div>
       </DialogContent>
     </Dialog>

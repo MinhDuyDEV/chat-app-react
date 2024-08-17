@@ -55,15 +55,20 @@ const ConversationSidebar: FC<Props> = () => {
                         getDisplayUser(conversation).lastName
                       }`}
                     </p>
-                    <p className='text-sm font-light text-neutral-500'>
-                      {conversation.lastMessageSent?.content.length > 30
-                        ? `
+                    <div className='flex items-center justify-between'>
+                      <p className='text-sm font-normal text-neutral-500'>
+                        {conversation.lastMessageSent?.content.length > 30
+                          ? `
                         ${conversation.lastMessageSent?.content.slice(0, 30)}...
                       `
-                        : `
+                          : `
                         ${conversation.lastMessageSent?.content}
                       `}
-                    </p>
+                      </p>
+                      <p className='text-sm font-normal text-neutral-500'>
+                        {conversation.lastMessageSent?.createdAt}
+                      </p>
+                    </div>
                   </div>
                 </div>
               ))}

@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom";
 import { useContext, useEffect } from "react";
 
 import { AppDispatch } from "@/store";
-import { MessageEventPayload } from "@/utils/types";
+import { ConversationType, MessageEventPayload } from "@/utils/types";
 import MessagePanel from "@/components/messages/MessagePanel";
 import { SocketContext } from "@/utils/contexts/SocketContext";
-import { updateConversation } from "@/store/conversationSlice";
+import { addConversation, updateConversation } from "@/store/conversationSlice";
 import { fetchMessagesThunk, addMessage } from "@/store/messageSlice";
 
 const ConversationChannelPage = () => {
@@ -20,14 +20,23 @@ const ConversationChannelPage = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
+    socket.emit("onClientConnect", {
+      conversationId: parseInt(id!),
+    });
     socket.on("onMessage", (payload: MessageEventPayload) => {
       dispatch(addMessage(payload));
       dispatch(updateConversation(payload));
     });
+    socket.on("onConversation", (payload: ConversationType) => {
+      console.log("Received onConversation Event");
+      console.log(payload);
+      dispatch(addConversation(payload));
+    });
     return () => {
       socket.off("onMessage");
+      socket.off("onConversation");
     };
-  }, [dispatch, socket]);
+  }, [dispatch, id, socket]);
 
   return <MessagePanel />;
 };

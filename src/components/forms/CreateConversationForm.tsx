@@ -1,8 +1,10 @@
 import { z } from "zod";
+import { FC } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,26 +13,52 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { AppDispatch } from "@/store";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { createConversationThunk } from "@/store/conversationSlice";
 
 const createConversationFormSchema = z.object({
-  recipient: z.string().min(2, {
-    message: "Recipient must be at least 2 characters.",
+  email: z.string().email({
+    message: "Invalid email address",
   }),
-  message: z.string().optional(),
+  message: z.string().min(1, {
+    message: "Message must be at least 1 character long",
+  }),
 });
 
-const CreateConversationForm = () => {
+type CreateConversationFormProps = {
+  setIsOpen: (isOpen: boolean) => void;
+};
+
+const CreateConversationForm: FC<CreateConversationFormProps> = ({
+  setIsOpen,
+}) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   const form = useForm<z.infer<typeof createConversationFormSchema>>({
     resolver: zodResolver(createConversationFormSchema),
     defaultValues: {
-      recipient: "",
+      email: "",
       message: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof createConversationFormSchema>) => {
-    console.log(values);
+  const onSubmit = async (
+    values: z.infer<typeof createConversationFormSchema>
+  ) => {
+    try {
+      dispatch(createConversationThunk(values))
+        .unwrap()
+        .then(({ data }) => {
+          navigate(`/conversations/${data.id}`);
+        });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsOpen(false);
+      form.reset();
+    }
   };
 
   return (
@@ -38,13 +66,13 @@ const CreateConversationForm = () => {
       <form onSubmit={form.handleSubmit(onSubmit)} className='w-full space-y-4'>
         <FormField
           control={form.control}
-          name='recipient'
+          name='email'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Recipient</FormLabel>
               <FormControl>
                 <Input
-                  placeholder='recipient'
+                  placeholder='email'
                   className='text-slate-900'
                   {...field}
                 />
@@ -58,7 +86,7 @@ const CreateConversationForm = () => {
           name='message'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Message (optional)</FormLabel>
+              <FormLabel>Message</FormLabel>
               <FormControl>
                 <Input
                   placeholder='message'

@@ -1,6 +1,3 @@
-import { useEffect } from "react";
-import { Outlet, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import {
   MessageSquareMore,
   RefreshCw,
@@ -8,6 +5,9 @@ import {
   User,
   Video,
 } from "lucide-react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 
 import { AppDispatch, RootState } from "@/store";
 import { fetchConversationsThunk } from "@/store/conversationSlice";
@@ -17,12 +17,19 @@ import ConversationSidebar from "@/components/conversations/ConversationSidebar"
 
 const ConversationPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { conversations } = useSelector(
     (state: RootState) => state.conversation
   );
+
   useEffect(() => {
-    dispatch(fetchConversationsThunk());
+    dispatch(fetchConversationsThunk())
+      .unwrap()
+      .then(({ data }) => {
+        navigate(`/conversations/${data[0].id}`);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   return (

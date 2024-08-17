@@ -1,10 +1,11 @@
 import axios, { AxiosRequestConfig } from "axios";
 import {
+  User,
+  CreateUserParams,
   ConversationType,
   CreateMessageParams,
-  CreateUserParams,
-  User,
   UserCredentialsParams,
+  CreateConversationParams,
 } from "./types";
 
 const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
@@ -27,3 +28,6 @@ export const getConversationMessages = (id: number) =>
 
 export const postNewMessage = (data: CreateMessageParams) =>
   axios.post(`${API_URL}/messages`, data, config);
+
+export const postNewConversation = (data: CreateConversationParams) =>
+  axios.post<ConversationType>(`${API_URL}/conversations`, data, config);
