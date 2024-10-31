@@ -13,7 +13,10 @@ const ScrollArea = React.forwardRef<
 
   React.useEffect(() => {
     if (scrollToBottom && viewportRef.current) {
-      viewportRef.current.scrollTop = viewportRef.current.scrollHeight;
+      viewportRef.current.scrollTo({
+        top: viewportRef.current.scrollHeight,
+        behavior: "smooth",
+      });
     }
   }, [scrollToBottom, children]);
 

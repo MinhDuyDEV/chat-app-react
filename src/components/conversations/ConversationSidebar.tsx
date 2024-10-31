@@ -29,7 +29,7 @@ const ConversationSidebar: FC<Props> = () => {
   };
 
   return (
-    <div className='h-full'>
+    <div className='h-full py-4'>
       <div className='flex h-full rounded-lg bg-neutral-800'>
         <aside className='flex flex-col w-[400px] h-full rounded-lg'>
           <header className='flex h-[80px] w-full items-center justify-between p-3'>

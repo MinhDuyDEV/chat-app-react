@@ -46,6 +46,7 @@ const MessagePanelFooter = () => {
                 <FormControl>
                   <Input
                     placeholder='Aa'
+                    autoComplete='off'
                     className='w-full border-none focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-neutral-400 rounded-3xl text-neutral-100 bg-neutral-700'
                     {...field}
                   />
